@@ -89,7 +89,11 @@ $.fn.editableTableWidget = function (options) {
 				editor.removeClass('error');
 			}
 		});
-		element.on('click keypress dblclick', showEditor)
+		var strRange = 'td';
+		if (activeOptions.immutable_attr != null && activeOptions.immutable_attr !== '' && activeOptions.immutable_attr.indexOf(',') === -1) {
+			strRange = "td:not(." + activeOptions.immutable_attr + ")";
+		}
+		element.find(strRange).on('click keypress dblclick', showEditor)
 		.css('cursor', 'pointer')
 		.keydown(function (e) {
 			var prevent = true,
@@ -110,7 +114,7 @@ $.fn.editableTableWidget = function (options) {
 			}
 		});
 
-		element.find('td').prop('tabindex', 1);
+		element.find(strRange).prop('tabindex', 1);
 
 		$(window).on('resize', function () {
 			if (editor.is(':visible')) {
@@ -126,6 +130,7 @@ $.fn.editableTableWidget.defaultOptions = {
 	cloneProperties: ['padding', 'padding-top', 'padding-bottom', 'padding-left', 'padding-right',
 					  'text-align', 'font', 'font-size', 'font-family', 'font-weight',
 					  'border', 'border-top', 'border-bottom', 'border-left', 'border-right'],
-	editor: $('<input>')
+	editor: $('<input>'),
+	immutable_attr: 'data-immutable'
 };
 
